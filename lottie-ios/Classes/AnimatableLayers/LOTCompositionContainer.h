@@ -8,13 +8,15 @@
 
 #import "LOTLayerContainer.h"
 #import "LOTAssetGroup.h"
+#import "LOTRenderSettings.h"
 
 @interface LOTCompositionContainer : LOTLayerContainer
 
 - (instancetype _Nonnull)initWithModel:(LOTLayer * _Nullable)layer
                           inLayerGroup:(LOTLayerGroup * _Nullable)layerGroup
                         withLayerGroup:(LOTLayerGroup * _Nullable)childLayerGroup
-                       withAssestGroup:(LOTAssetGroup * _Nullable)assetGroup;
+                       withAssestGroup:(LOTAssetGroup * _Nullable)assetGroup
+                        renderSettings:(LOTRenderSettings *_Nullable)renderSettings;
 
 - (nullable NSArray *)keysForKeyPath:(nonnull LOTKeypath *)keypath;
 

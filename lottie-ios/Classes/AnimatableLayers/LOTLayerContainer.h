@@ -11,13 +11,15 @@
 #import "LOTLayerGroup.h"
 #import "LOTKeypath.h"
 #import "LOTValueDelegate.h"
+#import "LOTRenderSettings.h"
 
 @class LOTValueCallback;
 
 @interface LOTLayerContainer : CALayer
 
 - (instancetype _Nonnull)initWithModel:(LOTLayer * _Nullable)layer
-                 inLayerGroup:(LOTLayerGroup * _Nullable)layerGroup;
+                          inLayerGroup:(LOTLayerGroup * _Nullable)layerGroup
+                        renderSettings:(LOTRenderSettings *_Nullable)renderSettings;
 
 @property (nonatomic,  readonly, strong, nullable) NSString *layerName;
 @property (nonatomic, nullable) NSNumber *currentFrame;

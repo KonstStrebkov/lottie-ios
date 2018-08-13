@@ -31,13 +31,16 @@
   BOOL _rootNodeHasUpdate;
   LOTNumberInterpolator *_opacityInterpolator;
   LOTTransformInterpolator *_transformInterolator;
+  LOTRenderSettings *_renderSettings;
 }
 
 - (instancetype _Nonnull)initWithInputNode:(LOTAnimatorNode * _Nullable)inputNode
-                                   contents:(NSArray * _Nonnull)contents
-                                    keyname:(NSString * _Nullable)keyname {
+                                  contents:(NSArray * _Nonnull)contents
+                                   keyname:(NSString * _Nullable)keyname
+                            renderSettings:(LOTRenderSettings *_Nullable)renderSettings {
   self = [super initWithInputNode:inputNode keyName:keyname];
   if (self) {
+    _renderSettings = renderSettings;
     _containerLayer = [CALayer layer];
     _containerLayer.actions = @{@"transform": [NSNull null],
                                 @"opacity": [NSNull null]};
@@ -71,11 +74,13 @@
     if ([item isKindOfClass:[LOTShapeFill class]]) {
       LOTFillRenderer *fillRenderer = [[LOTFillRenderer alloc] initWithInputNode:previousNode
                                                                        shapeFill:(LOTShapeFill *)item];
+      fillRenderer.renderSettings = _renderSettings;
       [self.containerLayer insertSublayer:fillRenderer.outputLayer atIndex:0];
       previousNode = fillRenderer;
     } else if ([item isKindOfClass:[LOTShapeStroke class]]) {
       LOTStrokeRenderer *strokRenderer = [[LOTStrokeRenderer alloc] initWithInputNode:previousNode
                                                                           shapeStroke:(LOTShapeStroke *)item];
+      strokRenderer.renderSettings = _renderSettings;
       [self.containerLayer insertSublayer:strokRenderer.outputLayer atIndex:0];
       previousNode = strokRenderer;
     } else if ([item isKindOfClass:[LOTShapePath class]]) {
@@ -92,7 +97,7 @@
       previousNode = circleAnimator;
     } else if ([item isKindOfClass:[LOTShapeGroup class]]) {
       LOTShapeGroup *shapeGroup = (LOTShapeGroup *)item;
-      LOTRenderGroup *renderGroup = [[LOTRenderGroup alloc] initWithInputNode:previousNode contents:shapeGroup.items keyname:shapeGroup.keyname];
+      LOTRenderGroup *renderGroup = [[LOTRenderGroup alloc] initWithInputNode:previousNode contents:shapeGroup.items keyname:shapeGroup.keyname renderSettings:_renderSettings];
       [self.containerLayer insertSublayer:renderGroup.containerLayer atIndex:0];
       previousNode = renderGroup;
     } else if ([item isKindOfClass:[LOTShapeTransform class]]) {

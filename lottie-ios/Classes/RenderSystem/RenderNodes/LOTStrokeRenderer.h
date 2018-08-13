@@ -8,11 +8,13 @@
 
 #import "LOTRenderNode.h"
 #import "LOTShapeStroke.h"
+#import "LOTRenderSettings.h"
 
 @interface LOTStrokeRenderer : LOTRenderNode
 
 - (instancetype _Nonnull)initWithInputNode:(LOTAnimatorNode *_Nullable)inputNode
                                 shapeStroke:(LOTShapeStroke *_Nonnull)stroke;
 
+@property (nonatomic, nullable) LOTRenderSettings *renderSettings;
 
 @end

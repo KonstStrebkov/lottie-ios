@@ -27,14 +27,17 @@
   CALayer *DEBUG_Center;
   LOTRenderGroup *_contentsGroup;
   LOTMaskContainer *_maskLayer;
+  LOTRenderSettings *_renderSettings;
 }
 
 @dynamic currentFrame;
 
 - (instancetype)initWithModel:(LOTLayer *)layer
-                 inLayerGroup:(LOTLayerGroup *)layerGroup {
+                 inLayerGroup:(LOTLayerGroup *)layerGroup
+               renderSettings:(LOTRenderSettings *_Nullable)renderSettings {
   self = [super init];
   if (self) {
+    _renderSettings = renderSettings;
     _wrapperLayer = [CALayer new];
     [self addSublayer:_wrapperLayer];
     DEBUG_Center = [CALayer layer];
@@ -97,7 +100,7 @@
     [self buildContents:layer.shapes];
   }
   if (layer.layerType == LOTLayerTypeSolid) {
-    _wrapperLayer.backgroundColor = layer.solidColor.CGColor;
+    _wrapperLayer.backgroundColor = _renderSettings.fixedSolidColor ?: layer.solidColor.CGColor;
   }
   if (layer.masks.count) {
     _maskLayer = [[LOTMaskContainer alloc] initWithMasks:layer.masks];
@@ -133,7 +136,7 @@
 }
 
 - (void)buildContents:(NSArray *)contents {
-  _contentsGroup = [[LOTRenderGroup alloc] initWithInputNode:nil contents:contents keyname:_layerName];
+  _contentsGroup = [[LOTRenderGroup alloc] initWithInputNode:nil contents:contents keyname:_layerName renderSettings:_renderSettings];
   [_wrapperLayer addSublayer:_contentsGroup.containerLayer];
 }
 

@@ -11,6 +11,7 @@
 #import "LOTComposition.h"
 #import "LOTKeypath.h"
 #import "LOTValueDelegate.h"
+#import "LOTRenderSettings.h"
 
 typedef void (^LOTAnimationCompletionBlock)(BOOL animationFinished);
 
@@ -18,6 +19,8 @@ typedef void (^LOTAnimationCompletionBlock)(BOOL animationFinished);
 
 /// Load animation by name from the default bundle, Images are also loaded from the bundle
 + (nonnull instancetype)animationNamed:(nonnull NSString *)animationName NS_SWIFT_NAME(init(name:));
+
++ (nonnull instancetype)animationNamed:(nonnull NSString *)animationName renderSettings:(LOTRenderSettings *)renderSettings NS_SWIFT_NAME(init(name:renderSettings:));
 
 /// Loads animation by name from specified bundle, Images are also loaded from the bundle
 + (nonnull instancetype)animationNamed:(nonnull NSString *)animationName inBundle:(nonnull NSBundle *)bundle NS_SWIFT_NAME(init(name:bundle:));

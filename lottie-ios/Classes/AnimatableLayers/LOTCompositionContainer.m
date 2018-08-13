@@ -26,8 +26,9 @@
 - (instancetype)initWithModel:(LOTLayer *)layer
                  inLayerGroup:(LOTLayerGroup *)layerGroup
                withLayerGroup:(LOTLayerGroup *)childLayerGroup
-              withAssestGroup:(LOTAssetGroup *)assetGroup {
-  self = [super initWithModel:layer inLayerGroup:layerGroup];
+              withAssestGroup:(LOTAssetGroup *)assetGroup
+               renderSettings:(LOTRenderSettings *)renderSettings {
+  self = [super initWithModel:layer inLayerGroup:layerGroup renderSettings:renderSettings];
   if (self) {
     DEBUG_Center = [CALayer layer];
     
@@ -48,13 +49,14 @@
       _timeInterpolator = [[LOTNumberInterpolator alloc] initWithKeyframes:layer.timeRemapping.keyframes];
     }
 
-    [self initializeWithChildGroup:childLayerGroup withAssetGroup:assetGroup];
+    [self initializeWithChildGroup:childLayerGroup withAssetGroup:assetGroup renderSettings:renderSettings];
   }
   return self;
 }
 
 - (void)initializeWithChildGroup:(LOTLayerGroup *)childGroup
-                  withAssetGroup:(LOTAssetGroup *)assetGroup {
+                  withAssetGroup:(LOTAssetGroup *)assetGroup
+                  renderSettings:(LOTRenderSettings *)renderSettings{
   NSMutableDictionary *childMap = [NSMutableDictionary dictionary];
   NSMutableArray *children = [NSMutableArray array];
   NSArray *reversedItems = [[childGroup.layers reverseObjectEnumerator] allObjects];
@@ -70,10 +72,14 @@
     LOTLayerContainer *child = nil;
     if (asset.layerGroup) {
       // Layer is a precomp
-      LOTCompositionContainer *compLayer = [[LOTCompositionContainer alloc] initWithModel:layer inLayerGroup:childGroup withLayerGroup:asset.layerGroup withAssestGroup:assetGroup];
+      LOTCompositionContainer *compLayer = [[LOTCompositionContainer alloc] initWithModel:layer
+                                                                             inLayerGroup:childGroup
+                                                                           withLayerGroup:asset.layerGroup
+                                                                          withAssestGroup:assetGroup
+                                                                           renderSettings:renderSettings];
       child = compLayer;
     } else {
-      child = [[LOTLayerContainer alloc] initWithModel:layer inLayerGroup:childGroup];
+      child = [[LOTLayerContainer alloc] initWithModel:layer inLayerGroup:childGroup renderSettings:renderSettings];
     }
     if (maskedLayer) {
       maskedLayer.mask = child;

@@ -24,6 +24,7 @@ static NSString * const kCompContainerAnimationKey = @"play";
   CGFloat _playRangeEndProgress;
   NSBundle *_bundle;
   CGFloat _animationProgress;
+  LOTRenderSettings *_renderSettings;
   // Properties for tracking automatic restoration of animation.
   BOOL _shouldRestoreStateWhenAttachedToWindow;
   LOTAnimationCompletionBlock _completionBlockToRestoreWhenAttachedToWindow;
@@ -33,6 +34,13 @@ static NSString * const kCompContainerAnimationKey = @"play";
 
 + (nonnull instancetype)animationNamed:(nonnull NSString *)animationName {
   return [self animationNamed:animationName inBundle:[NSBundle mainBundle]];
+}
+
++ (nonnull instancetype)animationNamed:(nonnull NSString *)animationName
+                        renderSettings:(LOTRenderSettings *)renderSettings NS_SWIFT_NAME(init(name:renderSettings:)) {
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    LOTComposition *comp = [LOTComposition animationNamed:animationName inBundle:mainBundle];
+    return [[self alloc] initWithModel:comp inBundle:mainBundle renderSettings:renderSettings];
 }
 
 + (nonnull instancetype)animationNamed:(nonnull NSString *)animationName inBundle:(nonnull NSBundle *)bundle {
@@ -100,6 +108,17 @@ static NSString * const kCompContainerAnimationKey = @"play";
   return self;
 }
 
+- (instancetype)initWithModel:(LOTComposition *)model inBundle:(NSBundle *)bundle renderSettings:(LOTRenderSettings *)renderSettings {
+    self = [self initWithFrame:model.compBounds];
+    if (self) {
+        _renderSettings = renderSettings;
+        _bundle = bundle;
+        [self _initializeAnimationContainer];
+        [self _setupWithSceneModel:model];
+    }
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
@@ -164,7 +183,11 @@ static NSString * const kCompContainerAnimationKey = @"play";
   }
   
   _sceneModel = model;
-  _compContainer = [[LOTCompositionContainer alloc] initWithModel:nil inLayerGroup:nil withLayerGroup:_sceneModel.layerGroup withAssestGroup:_sceneModel.assetGroup];
+  _compContainer = [[LOTCompositionContainer alloc] initWithModel:nil
+                                                     inLayerGroup:nil
+                                                   withLayerGroup:_sceneModel.layerGroup
+                                                  withAssestGroup:_sceneModel.assetGroup
+                                                   renderSettings:_renderSettings];
   [self.layer addSublayer:_compContainer];
   [self _restoreState];
   [self setNeedsLayout];

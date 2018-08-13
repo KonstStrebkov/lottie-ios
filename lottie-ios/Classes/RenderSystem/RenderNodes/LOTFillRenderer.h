@@ -8,10 +8,13 @@
 
 #import "LOTRenderNode.h"
 #import "LOTShapeFill.h"
+#import "LOTRenderSettings.h"
 
 @interface LOTFillRenderer : LOTRenderNode
 
 - (instancetype _Nonnull)initWithInputNode:(LOTAnimatorNode *_Nullable)inputNode
                                   shapeFill:(LOTShapeFill *_Nonnull)fill;
+
+@property (nonatomic, nullable) LOTRenderSettings *renderSettings;
 
 @end
