@@ -9,8 +9,8 @@
 
 @interface LOTRenderSettings : NSObject
 
-@property (nonatomic, nullable) CGColorRef fixedFillColor;
-@property (nonatomic, nullable) CGColorRef fixedStrokeColor;
-@property (nonatomic, nullable) CGColorRef fixedSolidColor;
+@property (nonatomic, nullable) UIColor *fixedFillColor;
+@property (nonatomic, nullable) UIColor *fixedStrokeColor;
+@property (nonatomic, nullable) UIColor *fixedSolidColor;
 
 @end

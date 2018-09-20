@@ -100,7 +100,7 @@
     [self buildContents:layer.shapes];
   }
   if (layer.layerType == LOTLayerTypeSolid) {
-    _wrapperLayer.backgroundColor = _renderSettings.fixedSolidColor ?: layer.solidColor.CGColor;
+    _wrapperLayer.backgroundColor = _renderSettings.fixedSolidColor.CGColor ?: layer.solidColor.CGColor;
   }
   if (layer.masks.count) {
     _maskLayer = [[LOTMaskContainer alloc] initWithMasks:layer.masks];
