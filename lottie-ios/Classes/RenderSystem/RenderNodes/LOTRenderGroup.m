@@ -30,7 +30,7 @@
   LOTBezierPath *_localPath;
   BOOL _rootNodeHasUpdate;
   LOTNumberInterpolator *_opacityInterpolator;
-  LOTTransformInterpolator *_transformInterolator;
+  LOTTransformInterpolator *_transformInterpolator;
   LOTRenderSettings *_renderSettings;
 }
 
