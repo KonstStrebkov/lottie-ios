@@ -153,13 +153,25 @@ static NSString * const kCompContainerAnimationKey = @"play";
   self.clipsToBounds = YES;
 }
 
+- (void)_commonInit {
+  _animationSpeed = 1;
+  _animationProgress = 0;
+  _loopAnimation = NO;
+  _autoReverseAnimation = NO;
+  _playRangeEndFrame = nil;
+  _playRangeStartFrame = nil;
+  _playRangeEndProgress = 0;
+  _playRangeStartProgress = 0;
+  _shouldRasterizeWhenIdle = NO;
+  [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_handleWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_handleWillEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
+
 #else
 
 - (void)_initializeAnimationContainer {
   self.wantsLayer = YES;
 }
-
-#endif
 
 - (void)_commonInit {
   _animationSpeed = 1;
@@ -170,6 +182,15 @@ static NSString * const kCompContainerAnimationKey = @"play";
   _playRangeStartFrame = nil;
   _playRangeEndProgress = 0;
   _playRangeStartProgress = 0;
+  _shouldRasterizeWhenIdle = NO;
+}
+
+#endif
+
+
+
+- (void)dealloc {
+  [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 - (void)_setupWithSceneModel:(LOTComposition *)model {
@@ -250,7 +271,7 @@ static NSString * const kCompContainerAnimationKey = @"play";
       _completionBlock = _completionBlockToRestoreWhenAttachedToWindow;
       _completionBlockToRestoreWhenAttachedToWindow = nil;
       
-      [self performSelector:@selector(_restoreState) withObject:nil afterDelay:0];
+      [self performSelector:@selector(_restoreState) withObject:nil afterDelay:0 inModes:@[NSRunLoopCommonModes]];
     }
   } else {
     // The view is being detached, capture information that need to be restored later.
@@ -261,6 +282,14 @@ static NSString * const kCompContainerAnimationKey = @"play";
       _completionBlock = nil;
     }
   }
+}
+
+- (void)_handleWillEnterBackground {
+  [self _handleWindowChanges: false];
+}
+
+- (void)_handleWillEnterForeground {
+  [self _handleWindowChanges: (self.window != nil)];
 }
 
 # pragma mark - Completion Block
@@ -769,7 +798,7 @@ static NSString * const kCompContainerAnimationKey = @"play";
   [CATransaction commit];
 }
 
-# pragma mark - CAANimationDelegate
+# pragma mark - CAAnimationDelegate
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)complete {
   if ([_compContainer animationForKey:kCompContainerAnimationKey] == anim &&
