@@ -37,7 +37,7 @@ static NSString * const kCompContainerAnimationKey = @"play";
 }
 
 + (nonnull instancetype)animationNamed:(nonnull NSString *)animationName
-                        renderSettings:(LOTRenderSettings *)renderSettings NS_SWIFT_NAME(init(name:renderSettings:)) {
+                        renderSettings:(nullable LOTRenderSettings *)renderSettings NS_SWIFT_NAME(init(name:renderSettings:)) {
     NSBundle *mainBundle = [NSBundle mainBundle];
     LOTComposition *comp = [LOTComposition animationNamed:animationName inBundle:mainBundle];
     return [[self alloc] initWithModel:comp inBundle:mainBundle renderSettings:renderSettings];
