@@ -105,8 +105,13 @@
 - (void)performLocalUpdate {
   self.outputLayer.lineDashPhase = [_dashOffsetInterpolator floatValueForFrame:self.currentFrame];
   self.outputLayer.strokeColor = self.renderSettings.fixedStrokeColor.CGColor ?: [_colorInterpolator colorForFrame:self.currentFrame];
-  self.outputLayer.lineWidth = [_widthInterpolator floatValueForFrame:self.currentFrame];
   self.outputLayer.opacity = [_opacityInterpolator floatValueForFrame:self.currentFrame];
+
+  if (self.renderSettings.fixedStrokeWidth) {
+    self.outputLayer.lineWidth = self.renderSettings.fixedStrokeWidth.floatValue;
+  } else {
+    self.outputLayer.lineWidth = [_widthInterpolator floatValueForFrame:self.currentFrame];
+  }
 }
 
 - (void)rebuildOutputs {
